@@ -1,0 +1,67 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - '*'
+
+concurrency: build-and-push
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build artifact
+
+    runs-on: ubuntu-latest
+
+    container:
+      image: ghcr.io/nerves-containers/ci:1.28.2
+      options: --user root
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # https://github.com/actions/checkout/issues/47
+      - name: Fix file ownership
+        shell: bash
+        run: |
+          usermod --uid 1001 nerves
+          chown --recursive --verbose 1001 .  # fix checkout uid
+
+      - name: Rebar
+        shell: su --preserve-environment nerves {0}
+        run: mix local.rebar --force
+
+      - name: Hex
+        shell: su --preserve-environment nerves {0}
+        run: mix local.hex --force
+
+      - name: nerves_bootstrap
+        shell: su --preserve-environment nerves {0}
+        run: mix archive.install --force hex nerves_bootstrap
+
+      - name: deps
+        shell: su --preserve-environment nerves {0}
+        run: mix deps.get
+
+      - name: Create target dir
+        run: mkdir -p /tmp/nerves_artifacts/ && chown -R nerves:nerves /tmp/nerves_artifacts/
+
+      - name: build
+        shell: su --preserve-environment nerves {0}
+        run: mix nerves.artifact --path /tmp/nerves_artifacts
+
+      - name: Artifact upload
+        uses: actions/upload-artifact@v4
+        with:
+          path: /tmp/nerves_artifacts/*
+  
+      - name: Publish archives and packages
+        uses: softprops/action-gh-release@v2
+        with:
+          files: /tmp/nerves_artifacts/*
+        if: startsWith(github.ref, 'refs/tags/')

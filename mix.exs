@@ -1,8 +1,8 @@
-defmodule NervesSystemRpi5.MixProject do
+defmodule NervesContainersRpi5.MixProject do
   use Mix.Project
 
-  @github_organization "nerves-project"
-  @app :nerves_system_rpi5
+  @github_organization "nerves-containers"
+  @app :nerves_containers_rpi5
   @source_url "https://github.com/#{@github_organization}/#{@app}"
   @version Path.join(__DIR__, "VERSION")
            |> File.read!()
@@ -108,7 +108,8 @@ defmodule NervesSystemRpi5.MixProject do
       "fwup-ops.conf",
       "fwup.conf",
       "LICENSE",
-      "linux-6.6.defconfig",
+      "linux.fragment",
+      "busybox.fragment",
       "mix.exs",
       "nerves_defconfig",
       "post-build.sh",
