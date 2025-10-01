@@ -20,12 +20,7 @@ defmodule NervesContainersRpi5.MixProject do
       package: package(),
       deps: deps(),
       aliases: [loadconfig: [&bootstrap/1]],
-      docs: docs(),
-      preferred_cli_env: %{
-        docs: :docs,
-        "hex.build": :docs,
-        "hex.publish": :docs
-      }
+      docs: docs()
     ]
   end
 
@@ -37,6 +32,10 @@ defmodule NervesContainersRpi5.MixProject do
     set_target()
     Application.start(:nerves_bootstrap)
     Mix.Task.run("loadconfig", args)
+  end
+
+  def cli do
+    [preferred_envs: %{docs: :docs, "hex.build": :docs, "hex.publish": :docs}]
   end
 
   defp nerves_package do
@@ -68,7 +67,7 @@ defmodule NervesContainersRpi5.MixProject do
   defp deps do
     [
       {:nerves, "~> 1.11", runtime: false},
-      {:nerves_system_br, "1.28.3", runtime: false},
+      {:nerves_system_br, "1.31.7", runtime: false},
       {:nerves_toolchain_aarch64_nerves_linux_gnu, "~> 13.2.0", runtime: false},
       {:nerves_system_linter, "~> 0.4", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.22", only: :docs, runtime: false}
@@ -93,8 +92,12 @@ defmodule NervesContainersRpi5.MixProject do
   defp package do
     [
       files: package_files(),
-      licenses: ["Apache-2.0"],
-      links: %{"GitHub" => @source_url}
+      licenses: ["GPL-2.0-only", "GPL-2.0-or-later"],
+      links: %{
+        "GitHub" => @source_url,
+        "REUSE Compliance" =>
+          "https://api.reuse.software/info/github.com/nerves-project/nerves_system_rpi5"
+      }
     ]
   end
 
@@ -107,7 +110,7 @@ defmodule NervesContainersRpi5.MixProject do
       "config.txt",
       "fwup-ops.conf",
       "fwup.conf",
-      "LICENSE",
+      "LICENSES/*",
       "linux.fragment",
       "busybox.fragment",
       "mix.exs",
@@ -116,6 +119,7 @@ defmodule NervesContainersRpi5.MixProject do
       "post-createfs.sh",
       "ramoops.dts",
       "README.md",
+      "REUSE.toml",
       "VERSION"
     ]
   end

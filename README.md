@@ -1,20 +1,21 @@
 # Raspberry Pi 5 Model B (64-bit)
 
-[![CircleCI](https://circleci.com/gh/nerves-project/nerves_system_rpi5.svg?style=svg)](https://circleci.com/gh/nerves-project/nerves_system_rpi5)
 [![Hex version](https://img.shields.io/hexpm/v/nerves_system_rpi5.svg "Hex version")](https://hex.pm/packages/nerves_system_rpi5)
+[![CI](https://github.com/nerves-project/nerves_system_rpi5/actions/workflows/ci.yml/badge.svg)](https://github.com/nerves-project/nerves_system_rpi5/actions/workflows/ci.yml)
+[![REUSE status](https://api.reuse.software/badge/github.com/nerves-project/nerves_system_rpi5)](https://api.reuse.software/info/github.com/nerves-project/nerves_system_rpi5)
 
 This is the base Nerves System configuration for the Raspberry Pi 5 Model B.
 
 ![Raspberry Pi 5 image](assets/images/RaspberryPi_5B.svg)
 <br><sup>[Efa / Wikimedia Commons / CC BY-SA
-4.0](https://en.wikipedia.org/wiki/Raspberry_Pi#/media/File:RaspberryPi_5B.svg)</sup>
+4.0](https://en.wikipedia.org/wiki/Raspberry_Pi#/media/File:RaspberryPi_5B_28-08-2024.svg)</sup>
 
 | Feature              | Description                      |
 | -------------------- | -------------------------------- |
 | CPU                  | 2.4 GHz quad-core Cortex-A76     |
 | Memory               | 4 GB or 8 GB DRAM                |
 | Storage              | MicroSD                          |
-| Linux kernel         | 6.1 w/ Raspberry Pi patches      |
+| Linux kernel         | 6.12 w/ Raspberry Pi patches     |
 | IEx terminal         | HDMI and USB keyboard (can be changed to UART) |
 | GPIO, I2C, SPI       | Yes - [Elixir Circuits](https://github.com/elixir-circuits) |
 | ADC                  | No                               |
@@ -75,6 +76,16 @@ cmd("amixer cset numid=3 2")
 ```
 
 Change the last argument to `amixer` to `1` to output to the stereo output jack.
+
+## RP1 PIO
+
+The `rpi1-pio` device driver allows use of the PIO hardware using
+[`piolib`](https://github.com/raspberrypi/utils/tree/master/piolib). If you
+don't see `/dev/pio0`, the most likely cause is that you need to update your
+Raspberry Pi's boot EEPROM. See
+[rpi-eeprom](https://github.com/raspberrypi/rpi-eeprom) for binaries. It may be
+easier to upgrade the EEPROM via RaspberryPi OS if the instructions aren't
+clear.
 
 ## Provisioning devices
 
